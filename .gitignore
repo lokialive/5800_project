@@ -1,0 +1,3 @@
+*.pyc
+env/
+school_bus_routine/.env

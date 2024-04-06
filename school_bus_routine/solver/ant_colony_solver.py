@@ -1,5 +1,5 @@
 import numpy as np
-from school_bus_routine.solver.solver import TSPSolver
+from .tsp_solver import TSPSolver
 
 
 class TSPProblem:
@@ -9,7 +9,9 @@ class TSPProblem:
 
 
 class AntColonySolver(TSPSolver):
-    def __init__(self, distance_matrix, n_ants=10, n_iterations=100, decay=0.5, alpha=1, beta=2):
+    def __init__(
+        self, distance_matrix, n_ants=10, n_iterations=100, decay=0.5, alpha=1, beta=2
+    ):
         super().__init__(distance_matrix)  # Call the base class constructor
         self.n_ants = n_ants
         self.n_iterations = n_iterations
@@ -19,7 +21,7 @@ class AntColonySolver(TSPSolver):
         self.pheromone = np.ones(self.distance_matrix.shape) / len(self.distance_matrix)
 
     def solve(self):
-        best_cost = float('inf')
+        best_cost = float("inf")
         best_path = None
         for _ in range(self.n_iterations):
             paths = [self.generate_path(0) for _ in range(self.n_ants)]
@@ -39,10 +41,10 @@ class AntColonySolver(TSPSolver):
             current = path[-1]
             move_probabilities = self.move_probabilities(current, visited)
             next_city = self.roulette_wheel_selection(move_probabilities)
-            if next_city is not None:  # 检查是否有有效的下一个城市
+            if next_city is not None:
                 path.append(next_city)
                 visited.add(next_city)
-            else:  # 如果没有有效的下一个城市，跳出循环
+            else:
                 break
 
         path.append(start)  # Complete the tour
@@ -55,9 +57,11 @@ class AntColonySolver(TSPSolver):
         distances[distances == 0] = 1e-10
 
         for i in visited:
-            pheromones[i] = 0  # 将已访问城市的信息素设置为0
+            pheromones[i] = 0
 
-        desirability = np.power(pheromones, self.alpha) * np.power(1.0 / distances, self.beta)
+        desirability = np.power(pheromones, self.alpha) * np.power(
+            1.0 / distances, self.beta
+        )
 
         if np.sum(desirability) == 0:
             return np.zeros(len(distances))
@@ -74,10 +78,12 @@ class AntColonySolver(TSPSolver):
         return len(probabilities) - 1
 
     def path_cost(self, path):
-        return sum([self.distance_matrix[path[i], path[i + 1]] for i in range(len(path) - 1)])  # Use self.distance_matrix directly
+        return sum(
+            [self.distance_matrix[path[i], path[i + 1]] for i in range(len(path) - 1)]
+        )  # Use self.distance_matrix directly
 
     def update_pheromone(self, paths):
-        self.pheromone *= (1 - self.decay)
+        self.pheromone *= 1 - self.decay
         for path, cost in paths:
             for i in range(len(path) - 1):
                 self.pheromone[path[i]][path[i + 1]] += 1.0 / cost

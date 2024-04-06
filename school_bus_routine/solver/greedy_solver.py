@@ -1,4 +1,4 @@
-from .solver import TSPSolver
+from .tsp_solver import TSPSolver
 import numpy as np
 
 

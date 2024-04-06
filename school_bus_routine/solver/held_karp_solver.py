@@ -1,18 +1,27 @@
-from school_bus_routine.solver.solver import TSPSolver
+from .tsp_solver import TSPSolver
+
+
+"""
+Concrete Implementation of TSPSolver -- applies Held-Karp Algorithm
+"""
+
 
 class HeldKarpSolver(TSPSolver):
     def solve(self):
+        # dictionary used for memoization to store the minimum cost to reach each subset of points from each starting point
         memo = {}
-        # Use self.distance_matrix to access the distance matrix
+        # use self.distance_matrix to access the distance matrix
         all_points_set = frozenset(range(1, len(self.distance_matrix)))
 
         def search(start, points_set):
             if points_set == frozenset():
-                return self.distance_matrix[start][0], [0]  # Return to the starting point
+                return self.distance_matrix[start][0], [
+                    0
+                ]  # Return to the starting point
             elif (start, points_set) in memo:
                 return memo[(start, points_set)]
             else:
-                min_cost = float('inf')
+                min_cost = float("inf")
                 min_path = []
                 for endpoint in points_set:
                     remaining_points_set = points_set - frozenset([endpoint])

@@ -1,0 +1,6 @@
+school_bus_routine/solver/__pycache__/
+school_bus_routine/__pycache__/
+school_bus_routine/utils/__pycache__/
+env/
+school_bus_routine/.env
+__pycache__/

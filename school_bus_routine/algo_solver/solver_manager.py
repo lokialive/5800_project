@@ -85,8 +85,13 @@ class SolverManager:
             self.output_file_path,
         )
 
-        # Find the fastest algorithm
-        fastest_result = min(self.results, key=lambda x: x[3])
+        # Sort the results first by cost, then by time
+        sorted_results = sorted(self.results, key=lambda x: (x[1], x[3]))
+
+        # The first element of the sorted results is the one with the lowest cost and,
+        # if same, the lowest time will be the tiebreaker
+        fastest_result = sorted_results[0]
+
         FileManager.write_fastest_result(fastest_result, self.output_file_path)
 
         # Draw the fastest algorithm paths into images

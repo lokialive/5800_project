@@ -44,14 +44,14 @@ class DynamicMatrixGenerator:
             self.location_strings[key] = self.google_map.get_coordinates(value)
         # draw the route based on the locations
         # print(self.location_strings)
-        self.google_map.plot_nodes(self.location_strings, path)
+        self.google_map.plot_nodes(self.location_strings, self.node_mapping, path)
 
     def remove_connection(self, node1, node2):
         """Remove a connection by setting the distance to infinity (no direct path)."""
         idx1 = self.labels.index(node1)
         idx2 = self.labels.index(node2)
         self.matrix[idx1, idx2] = np.inf
-        self.matrix[idx2, idx1] = np.inf  # Assuming undirected graph
+        self.matrix[idx2, idx1] = np.inf
 
     def update_label(self, old_label, new_label):
         """Update a node's label."""

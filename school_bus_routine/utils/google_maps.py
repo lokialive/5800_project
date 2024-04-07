@@ -47,19 +47,17 @@ class GoogleMapsUtil:
                 "Geocode API did not return a result for the specified location string."
             )
 
-    def plot_nodes(self, locations, path=None):
+    def plot_nodes(self, locations, node_mapping, path=None):
         """
-        Generate a plot view of the nodes.
-
-        Parameters:
-        - locations: A dictionary of node labels to (latitude, longitude) tuples.
-        - path: An optional list of node labels indicating the order in which nodes are visited.
+        Generate a plot view of the nodes with a comment on the node mapping.
         """
         try:
+            plt.figure(figsize=(10, 10))
+
             # Plot each location
             for label, (lat, lon) in locations.items():
-                plt.plot(lon, lat, "bo")  # 'bo' stands for blue circle markers
-                plt.text(lon, lat, label, fontsize=12)  # Add text labels to the markers
+                plt.plot(lon, lat, "ro")  # 'ro': red circle markers
+                plt.text(lon, lat, label, fontsize=12)  # add text labels to the markers
 
             # If a path is provided, plot lines between each consecutive pair of nodes
             if path:
@@ -71,13 +69,23 @@ class GoogleMapsUtil:
                     plt.plot(
                         [start_coords[1], end_coords[1]],  # X coordinates: longitudes
                         [start_coords[0], end_coords[0]],  # Y coordinates: latitudes
-                        "k-",  # 'k-' stands for black lines
+                        "k-",  # 'k-' : black lines
                     )
 
-            # Set labels and show the plot
+            # set labels and title
             plt.xlabel("Longitude")
             plt.ylabel("Latitude")
-            plt.title("Nodes Plot View")
-            plt.savefig("route.png")
+            plt.title("Ideal Route: Node Plot View")
+
+            # adjust the subplot parameters: add space at the bottom
+            plt.subplots_adjust(bottom=0.27)
+
+            # comment below the plot for node mapping
+            mapping_comment = "Node Mapping: \n" + "\n".join(
+                f"{k}={v}" for k, v in node_mapping.items()
+            )
+            plt.figtext(0.5, 0.01, mapping_comment, ha="center", fontsize=11, wrap=True)
+
+            plt.savefig("ideal_route.png", bbox_inches="tight")
         except Exception as e:
-            print(f"An error occurred while saving the plot: {e}", file=sys.stderr)
+            print(f"An error occurred while plotting the nodes: {e}", file=sys.stderr)
